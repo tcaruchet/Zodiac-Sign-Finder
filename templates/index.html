@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zodiac Signs</title>
+    <script src="/static/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Découvrez vos signes astrologiques</h1>
+
+        <div class="input-container">
+            <input id="dateInput" maxlength='10' placeholder='22/08/2000' onkeypress="if(event.key === 'Enter'){document.getElementById('submitBtn').click(); event.preventDefault();}"/>
+                <button id="submitBtn">Découvrir</button>
+
+        </div>
+
+    
+
+        <div class="result" id="result"></div>
+
+        <button id="resetBtn" class="hidden">Recommencer</button>
+    </div>
+
+    <script>
+        const defaults = {
+          spread: 360,
+          ticks: 100,
+          gravity: 0,
+          decay: 0.94,
+          startVelocity: 30,
+        };
+
+        function shoot() {
+          confetti({
+            ...defaults,
+            particleCount: 30,
+            scalar: 1.2,
+            shapes: ["circle", "square"],
+            colors: ["#b51f09", "#d73c37", "#ee6146", "#dfbc5e", "#e6e0ae"],
+          });
+
+          confetti({
+            ...defaults,
+            particleCount: 20,
+            scalar: 2,
+            shapes: ["emoji"],
+            shapeOptions: {
+              emoji: {
+                value: ["🏮", "🐉", "🥮","🥠","🥢","🥡", "🧧", "🇨🇳", "☯"],
+              },
+            },
+          });
+        }
+        
+        const dateInput = document.getElementById("dateInput");
+
+        dateInput.addEventListener("input", (event) => {
+            let value = dateInput.value.replace(/\D/g, ""); // Supprimer tout sauf les chiffres
+
+            // Ajouter les slashes aux positions correctes
+            if (value.length > 1 && value.length <= 3) {
+                value = `${value.slice(0, 2)}/${value.slice(2)}`;
+                console.log("cas1")
+            } else if (value.length > 3) {
+                console.log("cas2")
+                value = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4)}`;
+            } else{
+                console.log("cas3")
+            }
+
+            dateInput.value = value;
+        });
+
+        dateInput.addEventListener("keydown", (event) => {
+            // Permettre la suppression correcte avec Backspace
+            if (event.key === "Backspace") {
+                const value = dateInput.value;
+                if (value.endsWith("/")) {
+                    dateInput.value = value.slice(0, -1); // Supprimer le slash automatiquement
+                }
+            }
+        });
+        
+        function parseDate(input) {
+            const patterns = [
+                /^(\d{4})-(\d{2})-(\d{2})$/, // YYYY-MM-DD
+                /^(\d{2})\/(\d{2})\/(\d{4})$/, // DD/MM/YYYY
+                /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, // dd/MM/YYYY
+                /^(\d{2})(\d{2})(\d{4})$/ // DDMMYYYY
+            ];
+
+            for (const pattern of patterns) {
+                const match = input.match(pattern);
+                if (match) {
+                    if (pattern === patterns[0]) {
+                        // YYYY-MM-DD
+                        return match[0];
+                    } else if (pattern === patterns[1] || pattern === patterns[2]) {
+                        // DD/MM/YYYY or dd/MM/YYYY
+                        const [, day, month, year] = match;
+                        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                    } else if (pattern === patterns[3]) {
+                        // DDMMYYYY
+                        const [, day, month, year] = match;
+                        return `${year}-${month}-${day}`;
+                    }
+                }
+            }
+            return null;
+        }
+
+        document.getElementById("submitBtn").addEventListener("click", async () => {
+            const dateInput = document.getElementById("dateInput").value.trim();
+            const formattedDate = parseDate(dateInput);
+
+            if (!formattedDate) {
+                alert("Veuillez entrer une date de naissance valide dans l'un des formats supportés : YYYY-MM-DD, DD/MM/YYYY, dd/MM/YYYY, DDMMYYYY !");
+                return;
+            }
+
+            // Vérification des plages pour jour et mois
+            const [year, month, day] = formattedDate.split("-").map(Number);
+            if (day < 1 || day > 31 || month < 1 || month > 12) {
+                console.log(day, month, year)
+                alert("Veuillez entrer un jour entre 01 et 31 et un mois entre 01 et 12 !");
+                return;
+            }
+
+            try {
+                // Utiliser ZodiacSigns pour obtenir les signes
+                const zodiac = new ZodiacSign(formattedDate, 'fr');
+                const westernSign = zodiac.sign;
+                const chineseSign = zodiac.chinese;
+
+                // Afficher les résultats
+                const resultDiv = document.getElementById("result");
+                resultDiv.innerHTML = `
+                    <p>Votre signe zodiacal occidental : <strong>${westernSign}</strong></p>
+                    <p>Votre signe zodiacal chinois : <strong>${chineseSign.sign}</strong> (${chineseSign.element} - ${chineseSign.yinyang})</p>
+                `;
+
+
+                setTimeout(shoot, 0);
+                setTimeout(shoot, 100);
+                setTimeout(shoot, 200);
+
+                // Envoyer la date au backend
+                await fetch("/save_date", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ date_of_birth: formattedDate, timestamp: new Date().toISOString() })
+                });
+
+                // Afficher le bouton de réinitialisation
+                document.getElementById("resetBtn").classList.remove("hidden");
+            } catch (error) {
+                console.error("Erreur :", error);
+                alert("Une erreur s'est produite. Veuillez vérifier la date et réessayer.");
+            }
+        });
+
+        document.getElementById("resetBtn").addEventListener("click", () => {
+            document.getElementById("dateInput").innerText = "";
+            document.getElementById("result").innerHTML = "";
+            document.getElementById("resetBtn").classList.add("hidden");
+        });
+
+
+
+    </script>
+</body>
+</html>
