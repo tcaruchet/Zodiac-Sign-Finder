@@ -14,8 +14,10 @@
     <h1>Découvrez vos signes astrologiques</h1>
 
     <div class="input-container">
-        <input id="dateInput" maxlength='10' placeholder='22/08/2000'
-            onkeypress="if(event.key === 'Enter'){document.getElementById('submitBtn').click(); event.preventDefault();}" />
+        <input id="dateInput" maxlength='10' placeholder='22/08/2000' type="text"
+    inputmode="numeric"
+    pattern="\d{2}/\d{2}/\d{4}"
+             />
         <button id="submitBtn">Découvrir</button>
 
     </div>
@@ -56,6 +58,15 @@
         }
 
         const dateInput = document.getElementById("dateInput");
+
+        dateInput.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault(); // Empêche le comportement par défaut
+        document.getElementById("submitBtn").click(); // Déclenche le clic sur le bouton
+        this.blur(); // Perd le focus pour fermer le clavier
+    }
+});
+
 
         dateInput.addEventListener("input", (event) => {
             let value = dateInput.value.replace(/\D/g, ""); // Supprimer tout sauf les chiffres
