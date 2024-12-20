@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,54 +9,52 @@
     <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
-    <div class="container">
-        <h1>Découvrez vos signes astrologiques</h1>
+    <h1>Découvrez vos signes astrologiques</h1>
 
-        <div class="input-container">
-            <input id="dateInput" maxlength='10' placeholder='22/08/2000' onkeypress="if(event.key === 'Enter'){document.getElementById('submitBtn').click(); event.preventDefault();}"/>
-                <button id="submitBtn">Découvrir</button>
+    <div class="input-container">
+        <input id="dateInput" maxlength='10' placeholder='22/08/2000'
+            onkeypress="if(event.key === 'Enter'){document.getElementById('submitBtn').click(); event.preventDefault();}" />
+        <button id="submitBtn">Découvrir</button>
 
-        </div>
-
-    
-
-        <div class="result" id="result"></div>
-
-        <button id="resetBtn" class="hidden">Recommencer</button>
     </div>
+
+    <div class="result" id="result"></div>
+
+    <button id="resetBtn" class="hidden">Recommencer</button>
 
     <script>
         const defaults = {
-          spread: 360,
-          ticks: 100,
-          gravity: 0,
-          decay: 0.94,
-          startVelocity: 30,
+            spread: 360,
+            ticks: 100,
+            gravity: 0,
+            decay: 0.94,
+            startVelocity: 30,
         };
 
         function shoot() {
-          confetti({
-            ...defaults,
-            particleCount: 30,
-            scalar: 1.2,
-            shapes: ["circle", "square"],
-            colors: ["#b51f09", "#d73c37", "#ee6146", "#dfbc5e", "#e6e0ae"],
-          });
+            confetti({
+                ...defaults,
+                particleCount: 30,
+                scalar: 1.2,
+                shapes: ["circle", "square"],
+                colors: ["#b51f09", "#d73c37", "#ee6146", "#dfbc5e", "#e6e0ae"],
+            });
 
-          confetti({
-            ...defaults,
-            particleCount: 20,
-            scalar: 2,
-            shapes: ["emoji"],
-            shapeOptions: {
-              emoji: {
-                value: ["🏮", "🐉", "🥮","🥠","🥢","🥡", "🧧", "🇨🇳", "☯"],
-              },
-            },
-          });
+            confetti({
+                ...defaults,
+                particleCount: 20,
+                scalar: 2,
+                shapes: ["emoji"],
+                shapeOptions: {
+                    emoji: {
+                        value: ["🏮", "🐉", "🥮", "🥠", "🥢", "🥡", "🧧", "🇨🇳", "☯"],
+                    },
+                },
+            });
         }
-        
+
         const dateInput = document.getElementById("dateInput");
 
         dateInput.addEventListener("input", (event) => {
@@ -68,7 +67,7 @@
             } else if (value.length > 3) {
                 console.log("cas2")
                 value = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4)}`;
-            } else{
+            } else {
                 console.log("cas3")
             }
 
@@ -84,7 +83,7 @@
                 }
             }
         });
-        
+
         function parseDate(input) {
             const patterns = [
                 /^(\d{4})-(\d{2})-(\d{2})$/, // YYYY-MM-DD
@@ -175,4 +174,5 @@
 
     </script>
 </body>
+
 </html>
