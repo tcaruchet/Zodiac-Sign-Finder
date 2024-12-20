@@ -1,39 +1,45 @@
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to bottom, #ff9a9e, #fad0c4);
+  font-family: sans-serif;
   color: white;
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: top;
   align-items: center;
   height: 100vh;
   margin: 0;
+  background-image: url('Logo_PI25Q1_kawai.png');
+  background-size: 300px;
+  background-repeat: no-repeat;
+  background-position: top;
+  background-color: darkred;
 }
 
-.container {
-  width: 80%;
-  max-width: 600px;
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 h1 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
+  margin-top: 300px;
 }
 
 input {
   display: block;
-  margin: 2em auto;
+  margin: 1em 0px;
   border: none;
   padding: 0;
-  width: 15ch;
-  background: repeating-linear-gradient(90deg, dimgrey 0, dimgrey 1ch, transparent 0, transparent 1.5ch) 0 100%/15ch 2px no-repeat;
-  font: 5ch droid sans mono, consolas, monospace;
-  letter-spacing: 0.5ch;
+  background: repeating-linear-gradient(80deg, lightgrey 0, lightgrey 1ch, transparent 0, transparent 28px) 0 100% / 280px 3px no-repeat;
+  font-size: 2em;
+  letter-spacing: 0.4em;
+  width: 280px;
+  color: white;
 }
+
 input:focus {
   outline: none;
-  color: dodgerblue;
+  color: white;
 }
 
 button {
