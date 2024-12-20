@@ -32,8 +32,8 @@ input {
   padding: 0;
   background: repeating-linear-gradient(80deg, lightgrey 0, lightgrey 1ch, transparent 0, transparent 28px) 0 100% / 280px 3px no-repeat;
   font-size: 2em;
-  letter-spacing: 0.4em;
-  width: 280px;
+  letter-spacing: 0.35em;
+  width: 290px;
   color: white;
 }
 
